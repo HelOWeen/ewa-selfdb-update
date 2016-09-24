@@ -1,12 +1,15 @@
 # A guide to create your own EVEWalletAware database update ...
 ... and consume it with EWA.
 
-I'm providing this guide for a _"Hit-by-a-bus" (unlikely)_ or _"Leaving EVE" (more likely)_ scenario. It shows you the tools needed and steps involved to create your own EWA DB updates 
-from CCP's legacy (MS SQL) database dump. The update process itself can be done by either of two possibilities: a local DB update using EWA itself _(it provides a command line parameter to do so)_ 
+I'm providing this guide for a _"Hit-by-a-bus" (unlikely)_ or _"Leaving EVE" (more likely)_ scenario. 
+It shows you the tools needed and steps involved to create your own EWA DB updates 
+from CCP's legacy (MS SQL) database dump. The update process itself can be done by either 
+of two possibilities: a local DB update using EWA itself _(it provides a command line parameter to do so)_ 
 or you can even host the DB update for yourself _(and others, if you like)_ on a web server.    
 
-While reading this guide, please keep in mind that what I describe here is not the _only_ possible way to do it, of course. A (technical) versatile user may be able to come up with his own way 
-of doing it after having read this guide. I simply outlin the way _I'm_ doing things. 
+While reading this guide, please keep in mind that what I describe here is not the _only_ possible 
+way to do it, of course. A (technical) versatile user may be able to come up with his own way 
+of doing it after having read this guide. I simply outline the way _I'm_ doing things. 
 
 Here's a quick listing of the steps involved for producing an update database, which will be explained 
 in detail in this document:
@@ -30,7 +33,7 @@ In order to follow the steps in this guide, you'll need a couple of tools. The f
 - MS SQL (Express) 2014 _(as of this writing, depends on what CCP uses)_: [MS SQL Express][mssqlexpress] 
 - Desmont McCallock's _(of EVEMon fame)_: [EVESDEToSQL][evesdetosql]
 - My own [EVESqlToMdb][evesqltomdb]
-- An empty copy of [EWA's database](/bin/EVESqlToMdb/EVEWalletAware.rar).
+- An empty copy of [EWA's database](./bin/EVESqlToMdb/EVEWalletAware.rar).
 
 ### MS SQL _(Express)_ 2014
 I won't go into detail on how to install the MS SQL Express edition. There are plenty of 
@@ -43,8 +46,8 @@ _(and most likely other EVE 3rd party devs)_ can't thank Desmont enough for this
 
 In the beginning, when CCP first started to publish its database for 3rd party development, it 
 provided all of the data as _one_ MS SQL database backup. One had to restore that data on his own 
-SQL server and where "go to go". This was the way it worked for __years__, so 3rd party devs settled 
-on that and created automatitions on how to use that data with their own apps.
+SQL server and then was "good to go". This was the way it worked for __years__, so 3rd party devs, 
+me included, settled on that and created automatitions on how to use that data with their own apps.
 
 CCP meanwhile provides its data as an absurd mix of a MS SQL database backup, a SQLite database and 
 a bunch of YAML files. There's reason behind that insanity, I admit, but 3rd party tools as old as 
@@ -138,9 +141,9 @@ interested to see in which stations we sold what. We therefore need the station 
 solor systems in which those are located. However, we don't need the exact coordinates of the 
 stations. So just drop that data in order to keep the update as small as possible.
 
-As you can see from [EVESqlToMdb documentation][evesqltomdb], the XML defines which data to use. 
-EVESqlToMdb has two buttons labled _"Test"_ which lets you test _(sic!)_ the respective database 
-connectivity. IOW: have you got the configuration right?
+As you can see from the [EVESqlToMdb documentation][evesqltomdb], the XML defines which data 
+to use. EVESqlToMdb has two buttons labled _"Test"_ which lets you test _(sic!)_ the 
+respective database connectivity. IOW: have you got the configuration right?
 
 If both tests are successfull, you may start the data export from SQL server to the empty EWA 
 database with _"Start data transfer"_
@@ -157,12 +160,17 @@ If in doubt, answer "Yes".
 Background: if you keep reusing the same database over and over, the file size will eventually 
 grow although the size of the data itself is about the same. This is due to how database engines 
 handle deletions. The data is not actually deleted, but the space in the file is marked as 
-_"Here' free space to use, if size permits!"_. Reusing the same database results in tables 
+_"Here's free space to use, if size permits!"_. Reusing the same database results in tables 
 with old data being deleted and recreated with new data. As the new data not always fits 
 perfectly in those empty gaps, 'lil "wholes" appear over time and grow in number, resulting in an 
 increased file size. Compressing the database gets rid off those "wholes".
 
 _(For the experts out there: yeah I know, that's oversimplified ...)_
+
+Off topic: contrary to what its name suggests, this tool _isn't_ restricted to EWA/EVE Online 
+_(with the exception of the "Autoincrement version ..." thing, of course)_, but can be used for *any* 
+data export - provided you figure out the correct ADO connection strings and column data type 
+mappings.
 
 ### Importing the new update into EWA (local version)
 OK, with the steps above, we've created a new EWA database update. Now we just need to "feed" it 

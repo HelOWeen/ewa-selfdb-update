@@ -13,7 +13,7 @@ of doing it after having read this guide. I simply outline the way _I'm_ doing t
 
 Here's a quick listing of the steps involved for producing an update database, which will be explained 
 in detail in this document:
-- Download what CCP names _"legacy"_ database update    
+- Download what CCP names _"legacy"_ database update.    
 Once nicknamed "SDE" _(Static Database Export)_ by CCP and often still referred so, the first 
 step is to grab a copy of the [SDE][sde].    
 
@@ -38,7 +38,7 @@ In order to follow the steps in this guide, you'll need a couple of tools. The f
 ### MS SQL _(Express)_ 2014
 I won't go into detail on how to install the MS SQL Express edition. There are plenty of 
 _HowTo's_ available on the net. But you need to get that to work! If you happen to have access to 
-a full version of MS SQL Server, I assume your familiar enough with that stuff in order to use it. 
+a full version of MS SQL Server, I assume you're familiar enough with that stuff in order to use it. 
 
 ### Desmont McCallock's EVESDEToSQL
 To be honest: Desmont's tool does the hard work for me. It has been a time/life safer. I 
@@ -47,7 +47,7 @@ _(and most likely other EVE 3rd party devs)_ can't thank Desmont enough for this
 In the beginning, when CCP first started to publish its database for 3rd party development, it 
 provided all of the data as _one_ MS SQL database backup. One had to restore that data on his own 
 SQL server and then was "good to go". This was the way it worked for __years__, so 3rd party devs, 
-me included, settled on that and created automatitions on how to use that data with their own apps.
+me included, settled on that and created automations on how to use that data with their own apps.
 
 CCP meanwhile provides its data as an absurd mix of a MS SQL database backup, a SQLite database and 
 a bunch of YAML files. There's reason behind that insanity, I admit, but 3rd party tools as old as 
@@ -65,7 +65,7 @@ downloaded from CCP.
 
 __Configuration:__ the archive includes a configuration file (EVESDEToSQL.exe.config) that 
 _should_ work out of the box with a local MS SQL Express installation done with default settings. 
-In case you're connecting to a different SQl server, you need to edit EVESDEToSQL.exe.config 
+In case you're connecting to a different SQL server, you need to edit EVESDEToSQL.exe.config 
 accordingly. If you're not familiar with this file type: it's a XML style file used 
 by .NET applications. The line in question is 
 
@@ -75,11 +75,11 @@ by .NET applications. The line in question is
 
 The part after _connectionString=_ is the part that needs to be edited. As this depends on your 
 SQL server configuration, I can't really tell what to put in there. But I refer you to 
-[connectionstrings.com][connectionstrings], a nice collection examples on how to connect 
+[connectionstrings.com][connectionstrings], a nice collection of examples on how to connect 
 to different database engines. If in doubt, post a question in EVE's Tech Lab forum, stating your 
 database server.
 
-_Please note:_ EVESDEToSQL is a cosnsole appliaction, so you need to run that from a command 
+_Please note:_ EVESDEToSQL is a console appliaction, so you need to run that from a command 
 prompt. You also need to provide a command line parameter to tell it what to do. Assuming the 
 simplest case, this parameter is "import", i.e. _"EVESDEToSQL.exe import"_
 
@@ -89,7 +89,7 @@ It offers a couple of more options, all of which are documented at its download 
 Being a developer, I wrote myself a tool to automate the creation of an EWA database update. 
 I admit that for a long time I've done that manually for each database update. But that was 
 back in the _two-releases-a-year_ cycle. When CCP switched to the six weeks release cycle used 
-now, that became rater cumbersome. Hence EVESqlToMdb came into existance. 
+now, that became rater cumbersome. Hence EVESqlToMdb came into existence. 
 
 As I've already published [EVESqlToMdb][evesqltomdb] as an open source tool, along with 
 a description of how to configure it, I refer you to that site for documentation instead of 
@@ -115,7 +115,7 @@ would be the place denoted by the _&lt;DBSetting Name="Target"&gt;_ location,
 C:\DATA\EVEWalletAware.mdb
 
 ## Putting the pieces together
-Now that we've set up everything correctly, let's go over the the steps to create an EWA DB update.
+Now that we've set up everything correctly, let's go over the steps to create an EWA DB update.
 
 ### EVESqlToMdb
 - __EVESqlToMdb__ - Copy the SDE ZIP file into its designated folder    
@@ -129,23 +129,23 @@ configuration right, you should now be able to run it:
 - Navigate to the folder where you place the tool
 - Run it with the "import" parameter: _EVESqlToMdb.EXE import_    
 
-If everything went as expected, it sould look similar like this:
+If everything went as expected, it should look similar like this:
 ![EVESqlToMdb results](./gfx/evesdetosql.png)
 
-Now we've recreated the old SQl server table layout - something we're familiar with and can work on.
+Now we've recreated the old SQL server table layout - something we're familiar with and can work on.
 
 ### EVESqlToMdb
 EWA uses only a subset of all of the EVE data CCP provides. And from the data tables it uses, 
 only a subset of all of the data provided within a table. For example we're of course 
 interested to see in which stations we sold what. We therefore need the station names and the 
-solor systems in which those are located. However, we don't need the exact coordinates of the 
+solar systems in which those are located. However, we don't need the exact coordinates of the 
 stations. So just drop that data in order to keep the update as small as possible.
 
 As you can see from the [EVESqlToMdb documentation][evesqltomdb], the XML defines which data 
-to use. EVESqlToMdb has two buttons labled _"Test"_ which lets you test _(sic!)_ the 
+to use. EVESqlToMdb has two buttons labeled _"Test"_ which lets you test _(sic!)_ the 
 respective database connectivity. IOW: have you got the configuration right?
 
-If both tests are successfull, you may start the data export from SQL server to the empty EWA 
+If both tests are successful, you may start the data export from SQL server to the empty EWA 
 database with _"Start data transfer"_
 
 Watch _(or not)_ the export progress. After all data has been exported, two things will happen. 
@@ -162,8 +162,8 @@ grow although the size of the data itself is about the same. This is due to how 
 handle deletions. The data is not actually deleted, but the space in the file is marked as 
 _"Here's free space to use, if size permits!"_. Reusing the same database results in tables 
 with old data being deleted and recreated with new data. As the new data not always fits 
-perfectly in those empty gaps, 'lil "wholes" appear over time and grow in number, resulting in an 
-increased file size. Compressing the database gets rid off those "wholes".
+perfectly in those empty gaps, 'lil "holes" appear over time and grow in number, resulting in an 
+increased file size. Compressing the database gets rid of those "woles".
 
 _(For the experts out there: yeah I know, that's oversimplified ...)_
 
@@ -176,16 +176,16 @@ mappings.
 OK, with the steps above, we've created a new EWA database update. Now we just need to "feed" it 
 to EWA. The traditional way is to click _? -&gt; Check for update_. This won't work of course. 
 But I've prepared for this _(and all for all the paranoids out there)_: EWA supports a command 
-line paramter to consume a (local) database update file:
+line parameter to consume a (local) database update file:
 
 - Open a command prompt    
 - Navigate to the installation folder of EWA    
 That's typically _C:\Program Files\BasicAware\EVEWalletAware_ or 
 _C:\Program Files (x86)\BasicAware\EVEWalletAware_ on 64-bit Windows
-- Start EWA with th parameter 
+- Start EWA with the parameter 
 /DBUpdateFromFile=_&lt;Location of our update DB incl. full path&gt;_, i.e.
 _EVEWalletAware.EXE /DBUpdateFromFile=C:\DATA\EVEWalletAware.mdb_    
-In case your path name includes spaces, surround it with doubles quotes, i.e. 
+In case your path name includes spaces, surround it with doubles quotes, e.g. 
 _"C:\My DATA\EVEWalletAware.mdb"_
 - EWA will take note of the parameter and ask you if you'd really like to update.
 
@@ -201,16 +201,16 @@ _(and possibly share it with other EWA users)_, you can do that as well. The ste
 
 #### Tweak EWA's configuration
 You need to edit parts of EWA's configuration, EVEWalletAware.ini. The easiest way of locating 
-that file is to click _? -&lt; Show locations_. From the window that opens, take note of the 
+that file is to click _? -&gt; Show locations_. From the window that opens, take note of the 
 last entry "Configuration file used". By clicking the button next to it, the folder where the INI 
-is located will open, so that you can doubleclick the INI to open in a text editor.
+is located will open so that you can doubleclick the INI to open in a text editor.
 
 Now you need to locate the \[Update\] section:
 ```ini
 [Update]
 ; This is the server where updates to the application are hosted.
 ; In order to be more flexible, the base host and the actual folder
-; are stored as two seperate entries.
+; are stored as two separate entries.
 VersionBaseURL=http://eve.basicaware.de
 VersionFile=/download/EVEWalletAware/EVEWalletAware2.txt
 ```
@@ -242,11 +242,11 @@ Website=/EVEWalletAware/update.html
 There are four entries which need our attention: VersionDB, URLDB, CanUpdateDB, 
 VersionMinRequiredDB
 
-But let's quickly go through theall of  entries in the text file:
+But let's quickly go through all of the entries in the text file:
 - _URLVersionBaseURL_    
 This points to the web server location where to look for updates. Normally it mirrors the 
-_VersionBaseURL=_ entry fomr EWA's INI. Here's the trick however: EWA updates its INI with this 
-value. That means with thise entry, you can redirect EWA to a new web server location, if that's 
+_VersionBaseURL=_ entry from EWA's INI. Here's the trick however: EWA updates its INI with this 
+value. That means with this entry you can redirect EWA to a new web server location if that's 
 necessary, _without_ the need for an EWA user to edit his (local) EWA configuration.
 - _VersionSetup_    
 This is the version of EWA included in the setup file. This _may_ differ (as it is the case here) 
@@ -259,7 +259,7 @@ __Needs to be edited!__ Remember when I told you to take note of the database ve
 the end of EVESqlToMdb's execution? This is the place where we need to put that new version number. 
 EWA compares the version provided here to the version of its local database. If _this_ version is 
 higher than its local version, it will notify you of a database update, if you click 
-_? -&lt; Check for update_. If you want to force an database update to EWA, the version here needs 
+_? -&gt; Check for update_. If you want to force an database update to EWA, the version here needs 
 to be higher than the local version.
 - _URLDB_    
 That's the download link for the database update. Obviously, when you upload your Db update to your 
